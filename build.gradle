@@ -59,13 +59,13 @@ ext.versions = [
 dependencies {
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: versions.servletApi
 
-
     api group: 'org.springframework.security', name: 'spring-security-web', version: "5.0.4.RELEASE"
     implementation group: 'org.springframework', name: 'spring-web', version: "5.0.5.RELEASE"
+
     implementation group: 'com.google.guava', name: 'guava', version: "${versions.guava}"
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${versions.slf4j}"
-    implementation group: 'com.digitalascent', name: 'digitalascent-common', version: '0.1.10'
-//    implementation group: 'com.digitalascent', name: 'digitalascent-common-servlet', version: '0.1.10'
+    implementation group: 'com.digitalascent', name: 'digitalascent-common', version: '0.1.11'
+//    implementation group: 'com.digitalascent', name: 'digitalascent-common-web', version: '0.1.10'
 
     testRuntimeOnly group: 'org.slf4j', name: 'slf4j-simple', version: "${versions.slf4j}"
     testImplementation "org.codehaus.groovy:groovy-all:2.4.12"
