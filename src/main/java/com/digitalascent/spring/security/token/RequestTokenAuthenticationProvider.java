@@ -14,9 +14,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class RequestTokenAuthenticationProvider implements AuthenticationProvider {
 
-    private final Function<Authentication, TokenDetails> tokenDetailsFunction;
+    private final Function<RequestAuthenticationToken, TokenDetails> tokenDetailsFunction;
 
-    public RequestTokenAuthenticationProvider(Function<Authentication, TokenDetails> tokenDetailsFunction) {
+    public RequestTokenAuthenticationProvider(Function<RequestAuthenticationToken, TokenDetails> tokenDetailsFunction) {
         this.tokenDetailsFunction = checkNotNull(tokenDetailsFunction, "tokenDetailsFunction is required");
     }
 
@@ -25,7 +25,11 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
         checkNotNull(authentication, "authentication is required");
         checkArgument(supports(authentication.getClass()), "supports(authentication.getClass()) : %s", authentication);
 
-        TokenDetails tokenDetails = tokenDetailsFunction.apply(authentication);
+        if( !supports( authentication.getClass())) {
+            throw new AssertionError("Unexpected authentication token class: " + authentication );
+        }
+
+        TokenDetails tokenDetails = tokenDetailsFunction.apply((RequestAuthenticationToken) authentication);
         if( tokenDetails == null ) {
             throw new BadCredentialsException("Unable to locate credentials for " + authentication );
         }
