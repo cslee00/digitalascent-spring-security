@@ -51,7 +51,7 @@ wrapper {
 }
 
 ext.versions = [
-    "guava" : "24.0-jre",
+    "guava" : "25.0-jre",
     "slf4j" : "1.7.25",
     "servletApi": "3.1.0"
 ]
@@ -65,7 +65,7 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: "${versions.guava}"
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${versions.slf4j}"
     implementation group: 'com.digitalascent', name: 'digitalascent-common', version: '0.1.11'
-//    implementation group: 'com.digitalascent', name: 'digitalascent-common-web', version: '0.1.10'
+    implementation 'com.digitalascent:digitalascent-common-web:0.1.7'
 
     testRuntimeOnly group: 'org.slf4j', name: 'slf4j-simple', version: "${versions.slf4j}"
     testImplementation "org.codehaus.groovy:groovy-all:2.4.12"
