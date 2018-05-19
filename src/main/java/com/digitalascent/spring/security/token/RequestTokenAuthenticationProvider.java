@@ -7,6 +7,7 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -14,9 +15,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class RequestTokenAuthenticationProvider implements AuthenticationProvider {
 
-    private final Function<RequestAuthenticationToken, TokenDetails> tokenDetailsFunction;
+    private final Function<RequestAuthenticationToken, Optional<TokenDetails>> tokenDetailsFunction;
 
-    public RequestTokenAuthenticationProvider(Function<RequestAuthenticationToken, TokenDetails> tokenDetailsFunction) {
+    public RequestTokenAuthenticationProvider(Function<RequestAuthenticationToken, Optional<TokenDetails>> tokenDetailsFunction) {
         this.tokenDetailsFunction = checkNotNull(tokenDetailsFunction, "tokenDetailsFunction is required");
     }
 
@@ -25,11 +26,9 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
         checkNotNull(authentication, "authentication is required");
         checkArgument(supports(authentication.getClass()), "supports(authentication.getClass()) : %s", authentication);
 
-        TokenDetails tokenDetails = tokenDetailsFunction.apply((RequestAuthenticationToken) authentication);
-        if( tokenDetails == null ) {
-            throw new BadCredentialsException("Unable to locate credentials for " + authentication );
-        }
+        Optional<TokenDetails> optionalTokenDetails = tokenDetailsFunction.apply((RequestAuthenticationToken) authentication);
 
+        TokenDetails tokenDetails = optionalTokenDetails.orElseThrow(() ->  new BadCredentialsException("Unable to locate credentials for " + authentication ) );
         validateTokenDetails(tokenDetails);
 
         return new AuthenticatedRequestAuthenticationToken(tokenDetails, (AuthenticationDetails) authentication.getDetails());
