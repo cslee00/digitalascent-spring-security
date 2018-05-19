@@ -10,8 +10,6 @@ public interface TokenDetails {
 
     String getToken();
 
-    boolean isAccountNonLocked();
-
     boolean isCredentialsNonExpired();
 
     boolean isEnabled();

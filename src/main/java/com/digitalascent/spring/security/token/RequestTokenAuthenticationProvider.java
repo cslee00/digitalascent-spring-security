@@ -2,22 +2,21 @@ package com.digitalascent.spring.security.token;
 
 import com.digitalascent.spring.security.AuthenticationDetails;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Verify.verifyNotNull;
 
 public final class RequestTokenAuthenticationProvider implements AuthenticationProvider {
 
     private final Function<Authentication, TokenDetails> tokenDetailsFunction;
 
-    protected RequestTokenAuthenticationProvider(Function<Authentication, TokenDetails> tokenDetailsFunction) {
+    public RequestTokenAuthenticationProvider(Function<Authentication, TokenDetails> tokenDetailsFunction) {
         this.tokenDetailsFunction = checkNotNull(tokenDetailsFunction, "tokenDetailsFunction is required");
     }
 
@@ -27,7 +26,9 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
         checkArgument(supports(authentication.getClass()), "supports(authentication.getClass()) : %s", authentication);
 
         TokenDetails tokenDetails = tokenDetailsFunction.apply(authentication);
-        tokenDetails = verifyNotNull(tokenDetails,"retrieveTokenDetails must not return null");
+        if( tokenDetails == null ) {
+            throw new BadCredentialsException("Unable to locate credentials for " + authentication );
+        }
 
         validateTokenDetails(tokenDetails);
 
@@ -41,10 +42,6 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
 
         if (!tokenDetails.isEnabled()) {
             throw new DisabledException("Token disabled");
-        }
-
-        if( !tokenDetails.isAccountNonLocked()) {
-            throw new LockedException("Token locked");
         }
     }
 
