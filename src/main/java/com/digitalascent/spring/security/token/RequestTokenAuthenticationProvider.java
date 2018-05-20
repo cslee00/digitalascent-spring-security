@@ -31,7 +31,7 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
         TokenDetails tokenDetails = optionalTokenDetails.orElseThrow(() ->  new BadCredentialsException("Unable to locate credentials for " + authentication ) );
         validateTokenDetails(tokenDetails);
 
-        return new AuthenticatedRequestAuthenticationToken(tokenDetails, (AuthenticationDetails) authentication.getDetails());
+        return new AuthenticatedRequestAuthenticationToken(tokenDetails.getAuthorities(), tokenDetails, (AuthenticationDetails) authentication.getDetails());
     }
 
     private static void validateTokenDetails(TokenDetails tokenDetails) {

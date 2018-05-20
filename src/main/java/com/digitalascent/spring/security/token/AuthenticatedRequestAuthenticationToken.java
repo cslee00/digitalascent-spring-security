@@ -1,10 +1,11 @@
 package com.digitalascent.spring.security.token;
 
 import com.digitalascent.spring.security.AuthenticationDetails;
-import com.google.common.collect.ImmutableList;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,8 +15,8 @@ public final class AuthenticatedRequestAuthenticationToken extends AbstractAuthe
 
     private final Object principal;
 
-    AuthenticatedRequestAuthenticationToken(Object principal, AuthenticationDetails details) {
-        super(ImmutableList.of());
+    AuthenticatedRequestAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal, AuthenticationDetails details) {
+        super(authorities);
         this.principal = checkNotNull(principal, "principal is required");
         setAuthenticated(true);
         setDetails(checkNotNull(details, "details is required"));
