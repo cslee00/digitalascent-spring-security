@@ -31,12 +31,12 @@ public class RequestTokenAuthenticationFilterTest {
     @Before
     public void setup() {
         AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
-        Mockito.when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(new AuthenticatedRequestAuthenticationToken(ImmutableList.of(),"",authenticationDetails));
         filter = new RequestTokenAuthenticationFilter(TokenIdentifierExtractors.headerValue("x-api-key"), authenticationManager);
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         filterChain = new MockFilterChain();
         authenticationDetails = new WebAuthenticationDetails( request );
+        Mockito.when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(new AuthenticatedRequestAuthenticationToken(ImmutableList.of(),"",authenticationDetails));
     }
 
     @Test
