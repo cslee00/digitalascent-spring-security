@@ -41,6 +41,7 @@ public class RequestTokenAuthenticationFilterTest {
 
     @Test
     public void testAuthSucceeds() throws IOException, ServletException {
+
         request.addHeader("x-api-key", "12345");
         filter.doFilter(request,response,filterChain);
         assertThat( response.getStatus() ).isEqualTo( 200 );
