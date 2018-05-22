@@ -35,11 +35,11 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             Optional<String> optionalSuppliedToken = tokenIdentifierFunction.apply(request);
-            if (!optionalSuppliedToken.map(Strings::isNullOrEmpty).orElse(false)) {
+            if( !optionalSuppliedToken.isPresent() || Strings.isNullOrEmpty(optionalSuppliedToken.get())) {
                 throw new BadCredentialsException("Missing authentication token");
             }
 
-            AuthenticationDetails details = new AuthenticationDetails(request.getRemoteAddr(), request.getHeader("x-forwarded-by"));
+            AuthenticationDetails details = new AuthenticationDetails(request.getRemoteAddr());
             RequestAuthenticationToken requestAuthenticationToken = new RequestAuthenticationToken(optionalSuppliedToken.get(), details);
             Authentication authResult = authenticationManager.authenticate(requestAuthenticationToken);
             if (authResult == null) {
