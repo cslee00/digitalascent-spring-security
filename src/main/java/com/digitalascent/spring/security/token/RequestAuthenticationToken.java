@@ -1,10 +1,10 @@
 package com.digitalascent.spring.security.token;
 
 import com.digitalascent.common.base.SecureValues;
-import com.digitalascent.spring.security.AuthenticationDetails;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.annotation.Nullable;
 
@@ -15,7 +15,7 @@ public final class RequestAuthenticationToken extends AbstractAuthenticationToke
 
     private final String token;
 
-    public RequestAuthenticationToken(String token, AuthenticationDetails details) {
+    public RequestAuthenticationToken(String token, WebAuthenticationDetails details) {
         super(ImmutableList.of());
         this.token = checkNotNull(token, "token is required");
         setDetails(checkNotNull(details, "details is required"));

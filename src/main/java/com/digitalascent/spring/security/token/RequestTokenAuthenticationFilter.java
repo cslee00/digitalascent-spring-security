@@ -1,6 +1,5 @@
 package com.digitalascent.spring.security.token;
 
-import com.digitalascent.spring.security.AuthenticationDetails;
 import com.google.common.base.Strings;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,6 +7,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -39,7 +39,7 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
                 throw new BadCredentialsException("Missing authentication token");
             }
 
-            AuthenticationDetails details = new AuthenticationDetails(request.getRemoteAddr());
+            WebAuthenticationDetails details = new WebAuthenticationDetails(request);
             RequestAuthenticationToken requestAuthenticationToken = new RequestAuthenticationToken(optionalSuppliedToken.get(), details);
             Authentication authResult = authenticationManager.authenticate(requestAuthenticationToken);
             if (authResult == null) {

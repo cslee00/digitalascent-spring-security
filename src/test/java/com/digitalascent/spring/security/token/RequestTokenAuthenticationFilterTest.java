@@ -1,6 +1,5 @@
 package com.digitalascent.spring.security.token;
 
-import com.digitalascent.spring.security.AuthenticationDetails;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +10,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
@@ -26,7 +26,7 @@ public class RequestTokenAuthenticationFilterTest {
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     private MockFilterChain filterChain;
-    private final AuthenticationDetails authenticationDetails =new AuthenticationDetails("abc");
+    private WebAuthenticationDetails authenticationDetails;
 
     @Before
     public void setup() {
@@ -36,6 +36,7 @@ public class RequestTokenAuthenticationFilterTest {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         filterChain = new MockFilterChain();
+        authenticationDetails = new WebAuthenticationDetails( request );
     }
 
     @Test

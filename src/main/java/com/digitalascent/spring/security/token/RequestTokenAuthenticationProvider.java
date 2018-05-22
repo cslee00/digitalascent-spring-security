@@ -1,6 +1,5 @@
 package com.digitalascent.spring.security.token;
 
-import com.digitalascent.spring.security.AuthenticationDetails;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -31,7 +30,7 @@ public final class RequestTokenAuthenticationProvider implements AuthenticationP
         TokenDetails tokenDetails = optionalTokenDetails.orElseThrow(() ->  new BadCredentialsException("Unable to locate credentials for " + authentication ) );
         validateTokenDetails(tokenDetails);
 
-        return new AuthenticatedRequestAuthenticationToken(tokenDetails.getAuthorities(), tokenDetails, (AuthenticationDetails) authentication.getDetails());
+        return new AuthenticatedRequestAuthenticationToken(tokenDetails.getAuthorities(), tokenDetails, authentication.getDetails());
     }
 
     private static void validateTokenDetails(TokenDetails tokenDetails) {

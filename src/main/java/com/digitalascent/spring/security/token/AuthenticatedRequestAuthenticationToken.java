@@ -1,6 +1,5 @@
 package com.digitalascent.spring.security.token;
 
-import com.digitalascent.spring.security.AuthenticationDetails;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -15,7 +14,7 @@ public final class AuthenticatedRequestAuthenticationToken extends AbstractAuthe
 
     private final Object principal;
 
-    AuthenticatedRequestAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal, AuthenticationDetails details) {
+    AuthenticatedRequestAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal, Object details) {
         super(authorities);
         this.principal = checkNotNull(principal, "principal is required");
         setAuthenticated(true);
