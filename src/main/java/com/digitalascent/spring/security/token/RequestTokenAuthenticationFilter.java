@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,24 +26,16 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
     private final Function<HttpServletRequest, Optional<String>> tokenIdentifierFunction;
     private final AuthenticationManager authenticationManager;
     private final AuthenticationEventPublisher authenticationEventPublisher;
-    private final RequestMatcher requiresAuthenticationRequestMatcher;
     public RequestTokenAuthenticationFilter(Function<HttpServletRequest, Optional<String>> tokenIdentifierFunction,
                                             AuthenticationManager authenticationManager,
-                                            AuthenticationEventPublisher authenticationEventPublisher,
-                                            RequestMatcher requiresAuthenticationRequestMatcher) {
+                                            AuthenticationEventPublisher authenticationEventPublisher) {
         this.tokenIdentifierFunction = checkNotNull(tokenIdentifierFunction, "tokenIdentifierFunction is required");
         this.authenticationManager = checkNotNull(authenticationManager, "authenticationManager is required");
         this.authenticationEventPublisher = checkNotNull(authenticationEventPublisher, "authenticationEventPublisher is required");
-        this.requiresAuthenticationRequestMatcher = checkNotNull(requiresAuthenticationRequestMatcher, "requiresAuthenticationRequestMatcher is required");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if( !requiresAuthenticationRequestMatcher.matches(request)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         try {
             Optional<String> optionalSuppliedToken = tokenIdentifierFunction.apply(request);
             if( !optionalSuppliedToken.isPresent() || Strings.isNullOrEmpty(optionalSuppliedToken.get())) {
