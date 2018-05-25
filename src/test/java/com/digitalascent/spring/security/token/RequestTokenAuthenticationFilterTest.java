@@ -32,7 +32,7 @@ public class RequestTokenAuthenticationFilterTest {
     @Before
     public void setup() {
         AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
-        filter = new RequestTokenAuthenticationFilter(TokenIdentifierExtractors.headerValue("x-api-key"), authenticationManager, new DefaultAuthenticationEventPublisher(), (request) -> true );
+        filter = new RequestTokenAuthenticationFilter(TokenIdentifierExtractors.headerValue("x-api-key"), authenticationManager, new DefaultAuthenticationEventPublisher() );
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         filterChain = new MockFilterChain();
