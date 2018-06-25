@@ -1,7 +1,6 @@
 package com.digitalascent.spring.security.token;
 
 import com.google.common.base.Strings;
-import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
