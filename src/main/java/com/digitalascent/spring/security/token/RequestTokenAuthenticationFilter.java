@@ -36,15 +36,16 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
+        Authentication suppliedAuthentication = null;
         try {
             Optional<String> optionalSuppliedToken = tokenIdentifierFunction.apply(request);
             if( !optionalSuppliedToken.isPresent() || Strings.isNullOrEmpty(optionalSuppliedToken.get())) {
                 throw new BadCredentialsException("Missing authentication token");
             }
 
-            WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-            RequestAuthenticationToken requestAuthenticationToken = new RequestAuthenticationToken(optionalSuppliedToken.get(), details);
-            Authentication authResult = authenticationManager.authenticate(requestAuthenticationToken);
+            suppliedAuthentication = new RequestAuthenticationToken(optionalSuppliedToken.get(), details);
+            Authentication authResult = authenticationManager.authenticate(suppliedAuthentication);
             if (authResult == null) {
                 throw new BadCredentialsException("Null value from authentication manager");
             }
@@ -52,7 +53,7 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
 
             filterChain.doFilter(request, response);
         } catch (AuthenticationException failed) {
-            unsuccessfulAuthentication(request, response, failed);
+            unsuccessfulAuthentication(request, response, failed, suppliedAuthentication == null ? new RequestAuthenticationToken("---missing token---", details) : suppliedAuthentication);
         }
     }
 
@@ -60,7 +61,7 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
         SecurityContextHolder.getContext().setAuthentication(authResult);
     }
 
-    private void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    private void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed, Authentication authentication) {
         SecurityContextHolder.clearContext();
         if (failed instanceof InternalAuthenticationServiceException) {
             logger.error("An internal error occurred while trying to authenticate the request", failed);
@@ -68,6 +69,6 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-        authenticationEventPublisher.publishAuthenticationFailure(failed,null);
+        authenticationEventPublisher.publishAuthenticationFailure(failed,authentication);
     }
 }
