@@ -25,13 +25,10 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
 
     private final Function<HttpServletRequest, Optional<String>> tokenIdentifierFunction;
     private final AuthenticationManager authenticationManager;
-    private final AuthenticationEventPublisher authenticationEventPublisher;
     public RequestTokenAuthenticationFilter(Function<HttpServletRequest, Optional<String>> tokenIdentifierFunction,
-                                            AuthenticationManager authenticationManager,
-                                            AuthenticationEventPublisher authenticationEventPublisher) {
+                                            AuthenticationManager authenticationManager) {
         this.tokenIdentifierFunction = checkNotNull(tokenIdentifierFunction, "tokenIdentifierFunction is required");
         this.authenticationManager = checkNotNull(authenticationManager, "authenticationManager is required");
-        this.authenticationEventPublisher = checkNotNull(authenticationEventPublisher, "authenticationEventPublisher is required");
     }
 
     @Override
@@ -69,6 +66,5 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-        authenticationEventPublisher.publishAuthenticationFailure(failed,authentication);
     }
 }
