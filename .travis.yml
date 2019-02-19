@@ -7,8 +7,9 @@ install: true
 script: ./gradlew -Dorg.gradle.warning.mode=all test publishArtifacts --stacktrace
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f $HOME/.gradle/caches/*/*.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f $HOME/.gradle/caches/*/file-access.bin
 
 cache:
   directories:

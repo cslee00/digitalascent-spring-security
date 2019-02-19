@@ -1,8 +1,8 @@
 package com.digitalascent.spring.security.token;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -28,7 +28,7 @@ public class RequestTokenAuthenticationFilterTest {
     private MockFilterChain filterChain;
     private WebAuthenticationDetails authenticationDetails;
 
-    @Before
+    @BeforeEach
     public void setup() {
         AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
         filter = new RequestTokenAuthenticationFilter(TokenIdentifierExtractors.headerValue("x-api-key"), authenticationManager );

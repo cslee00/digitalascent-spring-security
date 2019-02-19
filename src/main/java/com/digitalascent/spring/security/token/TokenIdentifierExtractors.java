@@ -1,7 +1,7 @@
 package com.digitalascent.spring.security.token;
 
 import com.digitalascent.common.base.StaticUtilityClass;
-import com.digitalascent.common.web.HttpRequests;
+import com.digitalascent.servlet.HttpRequests;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;

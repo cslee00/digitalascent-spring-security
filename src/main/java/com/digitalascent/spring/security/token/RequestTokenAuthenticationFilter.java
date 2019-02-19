@@ -1,5 +1,6 @@
 package com.digitalascent.spring.security.token;
 
+import com.digitalascent.logger.FluentLogger;
 import com.google.common.base.Strings;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,8 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
     private final Function<HttpServletRequest, Optional<String>> tokenIdentifierFunction;
     private final AuthenticationManager authenticationManager;
@@ -57,10 +60,10 @@ public final class RequestTokenAuthenticationFilter extends OncePerRequestFilter
         SecurityContextHolder.getContext().setAuthentication(authResult);
     }
 
-    private void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed, Authentication authentication) {
+    private static void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed, Authentication authentication) {
         SecurityContextHolder.clearContext();
         if (failed instanceof InternalAuthenticationServiceException) {
-            logger.error("An internal error occurred while trying to authenticate the request", failed);
+            logger.atError().withCause(failed).log("An internal error occurred while trying to authenticate the request");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
